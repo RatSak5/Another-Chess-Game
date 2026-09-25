@@ -435,7 +435,12 @@ def remove_danger_slow(moves, board, self_colour):
     i = 0
     while i < len(moves):
         move = moves[i]
-        if board.king_under_attack(move, self_colour):
+        board.make_move(move)
+        king_bb = board.bitboard[self_colour + KING]
+        king_sq = king_bb.bit_length() - 1
+        in_check = under_attack(king_sq, board, self_colour)
+        board.unmake_move()
+        if in_check:
             del moves[i]
         else:
             i += 1
